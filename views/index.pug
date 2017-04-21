@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  ul
+    li
+      Books
+      ul
+        li
+          a(href="/books/new", title="title")New Book
