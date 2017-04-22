@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1= title
+  p
+    a(href="new_book", title="title").button Create New Book
+  p Filters 
+    a(href="#", title="title") All 
+    |  | 
+    a(href="#", title="title") Overdue 
+    |  | 
+    a(href="#", title="title") Checked Out 
+  table
+    thead
+      tr
+        th Title
+        th Author
+        th Genre
+        th Year Released
+    tbody
+     for book in books
+      tr
+        td
+          a(href="#") #{book.title} 
+        td #{book.author} 
+        td #{book.genre} 
+        td #{book.first_published} 
