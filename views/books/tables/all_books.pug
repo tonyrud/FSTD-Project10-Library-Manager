@@ -1,0 +1,8 @@
+tbody
+     for book in books
+      tr
+        td
+          a(href='/books/' + book.id) #{book.title} 
+        td #{book.author} 
+        td #{book.genre} 
+        td #{book.first_published} 

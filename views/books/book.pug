@@ -1,0 +1,26 @@
+include ./../layout.pug
+
+block content
+  h1 Book: #{title}
+  form(action="/books/" + book.id + "?_method=PUT", method="post")
+    include form
+  h2 Loan History
+  table
+    thead
+      tr
+        th Book
+        th Patron
+        th Loaned On
+        th Return By
+        th Returned On
+        th Action
+    tbody
+    //-  for loan in loaned
+      tr
+        td
+          a(href='/books/' + book.id) #{loan.title} 
+        td
+          a(href='/patron/' + patron.id) #{loan.title} 
+        td #{loan.author} 
+        td #{loan.genre} 
+        td #{loan.first_published} 

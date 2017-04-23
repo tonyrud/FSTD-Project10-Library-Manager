@@ -1,4 +1,5 @@
 'use strict';
+// import
 module.exports = function(sequelize, DataTypes) {
   var Loans = sequelize.define('Loans', {
     id: {
@@ -14,7 +15,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        // Loans.belongsTo(models.patrons, {foreignKey: 'patron_id'});
+				Loans.belongsTo(models.Books, {foreignKey: 'book_id'});
       }
     }
   });

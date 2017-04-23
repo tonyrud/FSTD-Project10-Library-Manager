@@ -1,0 +1,24 @@
+include ./../layout.pug
+
+block content
+  h1 #{title} Books
+  p
+    a(href="/books/new", title="title").button Create New Book
+  p Filters 
+    a(href="/books", title="title") All 
+    |  | 
+    a(href="/books/overdue", title="title") Overdue 
+    |  | 
+    a(href="/books/checked", title="title") Checked Out 
+  table
+    thead
+      tr
+        th Title
+        th Author
+        th Genre
+        th Year Released
+    if books
+      include ./tables/all_books.pug
+    if filtered
+      include ./tables/filtered_books.pug
+      
