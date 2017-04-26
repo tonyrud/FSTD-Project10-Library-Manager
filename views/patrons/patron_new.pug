@@ -1,0 +1,6 @@
+include ./../layout.pug
+
+block content
+  h1= title
+  form(action="/patrons/new", method="post")
+    include patron_form.pug

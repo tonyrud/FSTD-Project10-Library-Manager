@@ -1,0 +1,34 @@
+include ./../layout.pug
+
+block content
+  h1 #{title}
+  p
+    a(href="/loans/new").button Create New Loan
+  p Filters 
+    a(href="/loans") All 
+    |  | 
+    a(href="/loans/overdue") Overdue 
+    |  | 
+    a(href="/loans/checked") Checked Out 
+  table
+    thead
+      tr
+        th Book
+        th Patron
+        th Loaned On
+        th Return By
+        th Returned On
+        th Action
+    tbody
+     for loan in loans
+      tr
+        td
+          a(href='/books/' + loan.Book.id) #{loan.Book.title}
+        td
+          a(href='/patrons/' + loan.Patron.id) #{loan.Patron.first_name} #{loan.Patron.last_name} 
+        td #{loan.loaned_on} 
+        td #{loan.return_by} 
+        td #{loan.returned_on}
+        if !loan.returned_on
+          td 
+            a(href='/books/return/' + loan.Book.id).button Return Book

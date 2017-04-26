@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
   .then(books => {
     res.render('books/books_index', { books: books })
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(`Root Books Error: ${err}`)
     // res.send(500)
   })
 })
@@ -33,7 +33,7 @@ router.get('/overdue', function (req, res, next) {
   .then(books => {
     res.render('books/books_index', { filtered: books, title: 'Overdue' })
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(` Overdue Error: ${err}`)
     // res.send(500)
   })
 })
@@ -52,13 +52,13 @@ router.get('/checked', function (req, res, next) {
     // render books into checked to change table shown
     res.render('books/books_index', { filtered: books, title: 'Checked Out' })
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(`Checked Error: ${err}`)
   })
 })
 
 /* add books page. */
 router.get('/new', function (req, res, next) {
-  res.render('books/new_book', {
+  res.render('books/book_new', {
     book: models.Books.build(),
     title: 'New Book',
     btn: 'Create New Book'
@@ -81,7 +81,7 @@ router.post('/new', function (req, res, next) {
     //   throw err
     // }
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(`POST Error: ${err}`)
   })
 })
 
@@ -108,7 +108,7 @@ router.get('/:id', function (req, res, next) {
       res.send(404)
     }
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(`Book ID Error: ${err}`)
   })
 })
 
@@ -136,7 +136,7 @@ router.get('/return/:id', function (req, res, next) {
       res.send(404)
     }
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(`Return Error: ${err}`)
   })
 })
 
@@ -164,7 +164,7 @@ router.put('/:id', function (req, res, next) {
     //   throw err
     // }
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(` PUT Error: ${err}`)
   })
 })
 

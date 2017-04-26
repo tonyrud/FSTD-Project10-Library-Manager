@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Patrons.hasMany(models.Loans, {foreignKey: 'patron_id'})
-        // Patrons.hasMany(models.Book, {foreignKey: 'book_id'})
+        // Patrons.belongsTo(models.Book, {foreignKey: 'book_id'})
       }
     }
   });

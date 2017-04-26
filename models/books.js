@@ -42,6 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function (models) {
         Books.hasMany(models.Loans, {foreignKey: 'book_id'})
+        // Books.belongsTo(models.Loans, {foreignKey: 'book_id'})
       }
     }
   })

@@ -8,16 +8,37 @@ router.get('/', function (req, res, next) {
     order: [['id', 'ASC']]
   })
   .then(patrons => {
-    res.render('patrons/patrons_index', { patrons: patrons , title: 'Patrons'})
+    res.render('patrons/patrons_index', {patrons: patrons, title: 'Patrons'})
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(`Index Error: ${err}`)
     // res.send(500)
   })
 })
 
-/* GET individual book. */
+
+/* add patrons page. */
+router.get('/new', function (req, res, next) {
+  res.render('patrons/patron_new', {
+    patron: models.Patrons.build(),
+    title: 'New Patron',
+    btn: 'Create New Patron'
+  })
+})
+
+/* POST create patron. */
+router.post('/new', function (req, res, next) {
+  models.Patrons.create(req.body).then(patron => {
+    res.redirect('/patrons/')
+  }).catch((err) => {
+    debugger
+
+  }).catch(err => {
+    console.log(`POST Error: ${err}`)
+  })
+})
+
+/* GET individual patron. */
 router.get('/:id', function (req, res, next) {
-    // debugger
   models.Patrons.findAll({
     include: [{
       model: models.Loans,
@@ -38,8 +59,24 @@ router.get('/:id', function (req, res, next) {
       res.send(404)
     }
   }).catch(err => {
-    console.log(`Error: ${err}`)
+    console.log(`ID Error: ${err}`)
   })
 })
 
+/* PUT update article. */
+router.put('/:id', function (req, res, next) {
+  models.Patrons.findById(req.params.id).then((patron) => {
+    if (patron) {
+      return patron.update(req.body)
+    } else {
+      res.send(404)
+    }
+  }).then((patron) => {
+    res.redirect('/patrons')
+  }).catch((err) => {
+
+  }).catch(err => {
+    console.log(` PUT Error: ${err}`)
+  })
+})
 module.exports = router
