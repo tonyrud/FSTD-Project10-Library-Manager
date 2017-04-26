@@ -1,6 +1,6 @@
 'use strict';
 // import
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   var Loans = sequelize.define('Loans', {
     id: {
       type: DataTypes.INTEGER,
@@ -14,9 +14,10 @@ module.exports = function(sequelize, DataTypes) {
     returned_on: DataTypes.DATE
   }, {
     classMethods: {
-      associate: function(models) {
-        // Loans.belongsTo(models.patrons, {foreignKey: 'patron_id'});
-				Loans.belongsTo(models.Books, {foreignKey: 'book_id'});
+      associate: function (models) {
+        Loans.belongsTo(models.Patrons, {foreignKey: 'patron_id'})
+        Loans.belongsTo(models.Books, {foreignKey: 'book_id'})
+        // Loans.hasMany(models.Patrons, {foreignKey: 'patron_id'})
       }
     }
   });

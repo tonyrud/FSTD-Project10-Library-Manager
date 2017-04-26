@@ -11,11 +11,11 @@ module.exports = function(sequelize, DataTypes) {
     address: DataTypes.STRING,
     email: DataTypes.STRING,
     library_id: DataTypes.STRING,
-    zipcode: DataTypes.INTEGER
+    zip_code: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        Patrons.hasMany(models.Loans, {foreignKey: 'patron_id'})
       }
     }
   });

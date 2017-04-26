@@ -68,7 +68,7 @@ router.get('/new', function (req, res, next) {
 /* POST create book. */
 router.post('/new', function (req, res, next) {
   models.Books.create(req.body).then(book => {
-    res.redirect('/books/' + book.id)
+    res.redirect('/books/')
   }).catch((err) => {
     debugger
     // if (err.name === 'SequelizeValidationError') {
@@ -87,11 +87,50 @@ router.post('/new', function (req, res, next) {
 
 /* GET individual book. */
 router.get('/:id', function (req, res, next) {
-  models.Books.findById(req.params.id).then((book) => {
+    // debugger
+  models.Books.findAll({
+    include: [{
+      model: models.Loans,
+      include: [
+        models.Patrons
+      ]
+    }],
+    where: { id: req.params.id }
+  })
+  .then((book) => {
     if (book) {
       res.render('books/book', {
-        book: book,
-        title: book.title,
+        book: book[0],
+        loans: book[0].Loans,
+        patron: book[0].Loans[0].Patron,
+        btn: 'Update'
+      })
+    } else {
+      res.send(404)
+    }
+  }).catch(err => {
+    console.log(`Error: ${err}`)
+  })
+})
+
+/* GET individual book to return. */
+router.get('/return/:id', function (req, res, next) {
+    debugger
+  models.Books.findAll({
+    include: [{
+      model: models.Loans,
+      include: [
+        models.Patrons
+      ]
+    }],
+    where: { id: req.params.id }
+  })
+  .then((book) => {
+    if (book) {
+      res.render('books/book', {
+        book: book[0],
+        loans: book[0].Loans,
+        patron: book[0].Loans[0].Patron,
         btn: 'Update'
       })
     } else {

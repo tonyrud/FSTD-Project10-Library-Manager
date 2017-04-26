@@ -1,7 +1,7 @@
 include ./../layout.pug
 
 block content
-  h1 Book: #{title}
+  h1 Book: #{book.title}
   form(action="/books/" + book.id + "?_method=PUT", method="post")
     include form
   h2 Loan History
@@ -15,12 +15,14 @@ block content
         th Returned On
         th Action
     tbody
-    //-  for loan in loaned
+     for loan in loans
       tr
         td
-          a(href='/books/' + book.id) #{loan.title} 
+          a(href='/books/' + book.id) #{book.title} 
         td
-          a(href='/patron/' + patron.id) #{loan.title} 
-        td #{loan.author} 
-        td #{loan.genre} 
-        td #{loan.first_published} 
+          a(href='/patron/' + patron.id) #{patron.first_name} #{patron.last_name} 
+        td #{loan.loaned_on} 
+        td #{loan.return_by} 
+        td #{loan.returned_on}
+        td 
+          a(href='/books/return/' + book.id).button Return Book 
