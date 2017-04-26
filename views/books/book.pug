@@ -20,7 +20,7 @@ block content
         td
           a(href='/books/' + book.id) #{book.title} 
         td
-          a(href='/patron/' + patron.id) #{patron.first_name} #{patron.last_name} 
+          a(href='/patrons/' + loan.Patron.id) #{loan.Patron.first_name} #{loan.Patron.last_name} 
         td #{loan.loaned_on} 
         td #{loan.return_by} 
         td #{loan.returned_on}

@@ -9,7 +9,7 @@ router.get('/', function (req, res, next) {
     order: [['title', 'ASC']]
   })
   .then(books => {
-    res.render('books/index', { books: books })
+    res.render('books/books_index', { books: books })
   }).catch(err => {
     console.log(`Error: ${err}`)
     // res.send(500)
@@ -31,7 +31,7 @@ router.get('/overdue', function (req, res, next) {
     order: [[models.Books, 'title', 'ASC']]
   })
   .then(books => {
-    res.render('books/index', { filtered: books, title: 'Overdue' })
+    res.render('books/books_index', { filtered: books, title: 'Overdue' })
   }).catch(err => {
     console.log(`Error: ${err}`)
     // res.send(500)
@@ -50,7 +50,7 @@ router.get('/checked', function (req, res, next) {
   })
   .then(books => {
     // render books into checked to change table shown
-    res.render('books/index', { filtered: books, title: 'Checked Out' })
+    res.render('books/books_index', { filtered: books, title: 'Checked Out' })
   }).catch(err => {
     console.log(`Error: ${err}`)
   })
@@ -102,7 +102,6 @@ router.get('/:id', function (req, res, next) {
       res.render('books/book', {
         book: book[0],
         loans: book[0].Loans,
-        patron: book[0].Loans[0].Patron,
         btn: 'Update'
       })
     } else {

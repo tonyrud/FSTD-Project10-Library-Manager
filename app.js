@@ -9,9 +9,9 @@ var methodOverride = require('method-override')
 // Routes files
 var index = require('./routes/index');
 var books = require('./routes/books');
+var patrons = require('./routes/patrons');
 
 var app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -27,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/books', books);
+app.use('/patrons', patrons);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

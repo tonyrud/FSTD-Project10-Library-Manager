@@ -4,8 +4,7 @@
  * Module dependencies.
  */
 
-console.log(app)
-var app = require('../app');
+var app = require('./../app');
 var debug = require('debug')('fstd-project10-library-manager:server');
 var http = require('http');
 var sequelize = require('../models').sequelize
