@@ -27,6 +27,7 @@ router.get('/new', function (req, res, next) {
 
 /* POST create patron. */
 router.post('/new', function (req, res, next) {
+  debugger
   models.Patrons.create(req.body).then(patron => {
     res.redirect('/patrons/')
   }).catch((err) => {

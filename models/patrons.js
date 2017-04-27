@@ -14,9 +14,11 @@ module.exports = function(sequelize, DataTypes) {
     zip_code: DataTypes.INTEGER
   }, {
     classMethods: {
-      associate: function(models) {
+      associate: function (models) {
         Patrons.hasMany(models.Loans, {foreignKey: 'patron_id'})
-        // Patrons.belongsTo(models.Book, {foreignKey: 'book_id'})
+        // Patrons.belongsToMany(models.Loans, {through: 'patron_id'})
+        // Patrons.belongsTo(models.Loans, {oreignKey: 'patron_id'})
+        // Patrons.belongsTo(models.Book)
       }
     }
   });

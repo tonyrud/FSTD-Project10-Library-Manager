@@ -34,31 +34,31 @@ router.get('/checked', function (req, res, next) {
 })
 
 
-/* add patrons page. */
+/* new patrons page. */
 router.get('/new', function (req, res, next) {
-  models.Books.findAll({
-    // include: [models.Patrons]
-  })
-  .then(books => {
-    debugger
-    res.render('loans/loans_new', {books: books, title: 'Loans'})
+
+  const books = models.Books.findAll()
+  const patrons = models.Patrons.findAll()
+  Promise.all([books, patrons])
+  .then(data => {
+    res.render('loans/loans_new', {books: data[0], patrons: data[1], title: 'New Loan'})
   }).catch(err => {
-    console.log(`Index Error: ${err}`)
-    // res.send(500)
+    console.log(`New Loan Error: ${err}`)
   })
 })
 
 // /* POST create patron. */
-// router.post('/new', function (req, res, next) {
-//   models.Patrons.create(req.body).then(patron => {
-//     res.redirect('/patrons/')
-//   }).catch((err) => {
-//     debugger
+router.post('/new', function (req, res, next) {
+    debugger
+  models.Loans.create(req.body).then(loan => {
+    debugger
+    res.redirect('/loans/')
+  }).catch((err) => {
 
-//   }).catch(err => {
-//     console.log(`POST Error: ${err}`)
-//   })
-// })
+  }).catch(err => {
+    console.log(`POST Error: ${err}`)
+  })
+})
 
 // /* GET individual patron. */
 // router.get('/:id', function (req, res, next) {

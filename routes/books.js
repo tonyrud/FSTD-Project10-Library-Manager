@@ -114,7 +114,6 @@ router.get('/:id', function (req, res, next) {
 
 /* GET individual book to return. */
 router.get('/return/:id', function (req, res, next) {
-    debugger
   models.Books.findAll({
     include: [{
       model: models.Loans,
@@ -125,6 +124,7 @@ router.get('/return/:id', function (req, res, next) {
     where: { id: req.params.id }
   })
   .then((book) => {
+    debugger
     if (book) {
       res.render('books/book', {
         book: book[0],

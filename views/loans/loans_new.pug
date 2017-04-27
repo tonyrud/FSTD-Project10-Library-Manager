@@ -5,15 +5,19 @@ block content
   form(action="/loans/new", method="post")
     p
       label(for="book") Book
-      select(id="book")
+      select(id="book" name="book_id")
         for book in books
           option(value=book.id) #{book.title}
-    //- p
-    //-   label(for="patron") Patron
-    //-   input(type="text", id="patron", name="patron", value=loan.patron_id)
-    //- p
-    //-   label(for="loaned_on") Loaned On
-    //-   input(type="text", id="loaned_on", name="loaned_on", value=loan.loaned_on)
-    //- p
-    //-   label(for="return_by") Return By:
-    //-   input(type="text", id="return_by", name="return_by", value=loan.return_by)
+    p
+      label(for="Patron") Patron
+      select(id="Patron" name="patron_id")
+        for patron in patrons
+          option(value=patron.id) #{patron.first_name} #{patron.last_name}
+    p
+      label(for="loaned_on") Loaned On:
+      input(type="text", id="loaned_on", name="loaned_on", value=loaned_on)
+    p
+      label(for="loaned_on") Return By:
+      input(type="text", id="loaned_on", name="return_by", value=return_by)
+    p
+      input(type="submit" value='Create New Loan')
