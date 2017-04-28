@@ -87,7 +87,6 @@ router.post('/new', function (req, res, next) {
 
 /* GET individual book. */
 router.get('/:id', function (req, res, next) {
-    // debugger
   models.Books.findAll({
     include: [{
       model: models.Loans,
@@ -109,34 +108,6 @@ router.get('/:id', function (req, res, next) {
     }
   }).catch(err => {
     console.log(`Book ID Error: ${err}`)
-  })
-})
-
-/* GET individual book to return. */
-router.get('/return/:id', function (req, res, next) {
-  models.Books.findAll({
-    include: [{
-      model: models.Loans,
-      include: [
-        models.Patrons
-      ]
-    }],
-    where: { id: req.params.id }
-  })
-  .then((book) => {
-    debugger
-    if (book) {
-      res.render('books/book', {
-        book: book[0],
-        loans: book[0].Loans,
-        patron: book[0].Loans[0].Patron,
-        btn: 'Update'
-      })
-    } else {
-      res.send(404)
-    }
-  }).catch(err => {
-    console.log(`Return Error: ${err}`)
   })
 })
 

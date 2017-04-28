@@ -8,6 +8,11 @@ router.get('/', function (req, res, next) {
     include: [models.Patrons, models.Books]
   })
   .then(loans => {
+    // parse dates to 10 characters
+    loans.map((item) => {
+      item.dataValues.loaned_on = item.loaned_on.slice(0, 10)
+      item.dataValues.return_by = item.return_by.slice(0, 10)
+    })
     res.render('loans/loans_index', {loans: loans, title: 'Loans'})
   }).catch(err => {
     console.log(`Index Error: ${err}`)
@@ -47,59 +52,43 @@ router.get('/new', function (req, res, next) {
   })
 })
 
-// /* POST create patron. */
+// /* POST create loan. */
 router.post('/new', function (req, res, next) {
-    debugger
   models.Loans.create(req.body).then(loan => {
-    debugger
     res.redirect('/loans/')
   }).catch((err) => {
 
   }).catch(err => {
-    console.log(`POST Error: ${err}`)
+  console.log(`POST Error: ${err}`)
   })
 })
 
-// /* GET individual patron. */
-// router.get('/:id', function (req, res, next) {
-//   models.Patrons.findAll({
-//     include: [{
-//       model: models.Loans,
-//       include: [
-//         models.Books
-//       ]
-//     }],
-//     where: { id: req.params.id }
-//   })
-//   .then((patron) => {
-//     if (patron) {
-//       res.render('patrons/patron', {
-//         patron: patron[0],
-//         loans: patron[0].Loans,
-//         btn: 'Update'
-//       })
-//     } else {
-//       res.send(404)
-//     }
-//   }).catch(err => {
-//     console.log(`ID Error: ${err}`)
-//   })
-// })
+/* GET individual book to return. */
+router.get('/return/:id', function (req, res, next) {
+  models.Books.findAll({
+    include: [{
+      model: models.Loans,
+      include: [
+        models.Patrons
+      ]
+    }],
+    where: { id: req.params.id }
+  })
+  .then((book) => {
+    // debugger
+    if (book) {
+      res.render('loans/return_book', {
+        book: book[0],
+        loan: book[0].Loans[0],
+        patron: book[0].Loans[0].Patron,
+        btn: 'Return Book'
+      })
+    } else {
+      res.send(404)
+    }
+  }).catch(err => {
+    console.log(`Return Error: ${err}`)
+  })
+})
 
-// /* PUT update article. */
-// router.put('/:id', function (req, res, next) {
-//   models.Patrons.findById(req.params.id).then((patron) => {
-//     if (patron) {
-//       return patron.update(req.body)
-//     } else {
-//       res.send(404)
-//     }
-//   }).then((patron) => {
-//     res.redirect('/patrons')
-//   }).catch((err) => {
-
-//   }).catch(err => {
-//     console.log(` PUT Error: ${err}`)
-//   })
-// })
 module.exports = router
