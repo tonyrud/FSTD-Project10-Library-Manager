@@ -2,6 +2,8 @@ include ./../layout.pug
 
 block content
   h1= title
+  if errors
+    include ./../error.pug
   form(action="/loans/new", method="post")
     p
       label(for="book") Book
@@ -15,9 +17,9 @@ block content
           option(value=patron.id) #{patron.first_name} #{patron.last_name}
     p
       label(for="loaned_on") Loaned On:
-      input(type="text", id="loaned_on", name="loaned_on", value=loaned_on)
+      input(type="text", id="loaned_on", name="loaned_on", value=today)
     p
       label(for="loaned_on") Return By:
-      input(type="text", id="loaned_on", name="return_by", value=return_by)
+      input(type="text", id="loaned_on", name="return_by", value=returnBy)
     p
       input(type="submit" value='Create New Loan')

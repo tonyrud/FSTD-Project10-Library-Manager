@@ -2,6 +2,8 @@ include ./../layout.pug
 
 block content
   h1 Book: #{book.title}
+  if errors
+    include ./../error.pug
   form(action="/books/" + book.id + "?_method=PUT", method="post")
     include form
   h2 Loan History
@@ -24,5 +26,6 @@ block content
         td #{loan.loaned_on} 
         td #{loan.return_by} 
         td #{loan.returned_on}
-        td 
-          a(href='/books/return/' + book.id).button Return Book 
+        if !loan.returned_on
+          td 
+            a(href='/loans/return/' + book.id).button Return Book 

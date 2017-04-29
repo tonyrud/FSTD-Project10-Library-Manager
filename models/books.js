@@ -34,7 +34,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       validate: {
         isNumeric: {
-          msg: 'Must be a number'
+          msg: 'First Published must be a number'
         }
       }
     }

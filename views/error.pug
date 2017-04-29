@@ -1,6 +1,6 @@
-extends ./layout.pug
-
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  h2.error= message
+  //- p #{errors}
+  ul.error
+    for error in errors
+      li #{error.message}

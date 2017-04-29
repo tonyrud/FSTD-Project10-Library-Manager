@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 const models = require('../models')
+require('./routeFunctions')()
 
 /* GET all patrons page. */
 router.get('/', function (req, res, next) {
@@ -50,6 +51,7 @@ router.get('/:id', function (req, res, next) {
     where: { id: req.params.id }
   })
   .then((patron) => {
+    parseDate(patron)
     if (patron) {
       res.render('patrons/patron', {
         patron: patron[0],

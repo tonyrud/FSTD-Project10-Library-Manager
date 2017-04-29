@@ -25,5 +25,6 @@ block content
         td #{loan.loaned_on} 
         td #{loan.return_by} 
         td #{loan.returned_on}
-        td 
-          a(href='/books/return/' + patron.id).button Return Book 
+        if !loan.returned_on
+          td 
+            a(href='/loans/return/' + loan.Book.id).button Return Book 

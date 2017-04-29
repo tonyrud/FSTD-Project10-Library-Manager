@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 const models = require('../models')
 const moment = require('moment')
+require('./routeFunctions')()
 
 /* GET all books page. */
 router.get('/', function (req, res, next) {
@@ -11,8 +12,7 @@ router.get('/', function (req, res, next) {
   .then(books => {
     res.render('books/books_index', { books: books })
   }).catch(err => {
-    console.log(`Root Books Error: ${err}`)
-    // res.send(500)
+    errorHandler(err)
   })
 })
 
@@ -33,8 +33,7 @@ router.get('/overdue', function (req, res, next) {
   .then(books => {
     res.render('books/books_index', { filtered: books, title: 'Overdue' })
   }).catch(err => {
-    console.log(` Overdue Error: ${err}`)
-    // res.send(500)
+    errorHandler(err)
   })
 })
 
@@ -52,7 +51,7 @@ router.get('/checked', function (req, res, next) {
     // render books into checked to change table shown
     res.render('books/books_index', { filtered: books, title: 'Checked Out' })
   }).catch(err => {
-    console.log(`Checked Error: ${err}`)
+    errorHandler(err)
   })
 })
 
@@ -71,17 +70,19 @@ router.post('/new', function (req, res, next) {
     res.redirect('/books/')
   }).catch((err) => {
     debugger
-    // if (err.name === 'SequelizeValidationError') {
-    //   res.render('books/new_book', {
-    //     article: models.Books.build(req.body),
-    //     title: 'New Article',
-    //     errors: err.errors
-    //   })
-    // } else {
-    //   throw err
-    // }
+    if (err.name === 'SequelizeValidationError') {
+      res.render('books/book_new', {
+        book: models.Books.build(req.body),
+        title: 'New Book',
+        message: 'Ooops!',
+        errors: err.errors
+      })
+    } else {
+      // throw err into the next catch method
+      throw err
+    }
   }).catch(err => {
-    console.log(`POST Error: ${err}`)
+    errorHandler(err)
   })
 })
 
@@ -97,17 +98,19 @@ router.get('/:id', function (req, res, next) {
     where: { id: req.params.id }
   })
   .then((book) => {
-    if (book) {
+    if (book.length) {
+      parseDate(book)
       res.render('books/book', {
         book: book[0],
         loans: book[0].Loans,
         btn: 'Update'
       })
     } else {
-      res.send(404)
+      // send response error
+      errorHandler(undefined, res)
     }
   }).catch(err => {
-    console.log(`Book ID Error: ${err}`)
+    errorHandler(err)
   })
 })
 
@@ -118,24 +121,37 @@ router.put('/:id', function (req, res, next) {
     if (book) {
       return book.update(req.body)
     } else {
-      res.send(404)
+      errorHandler(undefined, res)
     }
   }).then((book) => {
-    res.redirect('/books/' + book.id)
+    res.redirect('/books/' + req.params.id)
   }).catch((err) => {
-    // if (err.name === 'SequelizeValidationError') {
-    //   const article = models.Books.build(req.body)
-    //   article.id = req.params.id
-    //   res.render('articles/new', {
-    //     article: article,
-    //     title: 'Edit Article',
-    //     errors: err.errors
-    //   })
-    // } else {
-    //   throw err
-    // }
+    models.Books.findAll({
+      include: [{
+        model: models.Loans,
+        include: [
+          models.Patrons
+        ]
+      }],
+      where: { id: req.params.id }
+    })
+    .then(book => {
+      if (err.name === 'SequelizeValidationError') {
+        let bookBuild = models.Books.build(req.body)
+        res.render('books/book', {
+          book: bookBuild,
+          loans: book[0].Loans,
+          message: 'Ooops!',
+          errors: err.errors
+        })
+      } else {
+        // throw err into the next catch method
+        throw err
+      }
+
+    })
   }).catch(err => {
-    console.log(` PUT Error: ${err}`)
+    errorHandler(err)
   })
 })
 

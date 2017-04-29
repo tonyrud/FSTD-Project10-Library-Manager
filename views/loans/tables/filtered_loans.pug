@@ -1,0 +1,13 @@
+tbody
+     for loan in filtered
+      tr
+        td
+          a(href='/books/' + loan.Book.id) #{loan.Book.title}
+        td
+          a(href='/patrons/' + loan.Patron.id) #{loan.Patron.first_name} #{loan.Patron.last_name} 
+        td #{loan.loaned_on} 
+        td #{loan.return_by} 
+        td #{loan.returned_on}
+        if !loan.returned_on
+          td 
+            a(href='/loans/return/' + loan.Book.id).button Return Book

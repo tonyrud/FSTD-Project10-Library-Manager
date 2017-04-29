@@ -2,6 +2,8 @@ include ./../layout.pug
 
 block content
   h1= title
+  if errors
+    include ./../error.pug
   form(action="/books/new", method="post")
     include form
     
