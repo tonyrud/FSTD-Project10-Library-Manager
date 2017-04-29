@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 const models = require('../models')
 require('./routeFunctions')()
+let hasErr = false
 
 /* GET all patrons page. */
 router.get('/', function (req, res, next) {
@@ -11,8 +12,7 @@ router.get('/', function (req, res, next) {
   .then(patrons => {
     res.render('patrons/patrons_index', {patrons: patrons, title: 'Patrons'})
   }).catch(err => {
-    console.log(`Index Error: ${err}`)
-    // res.send(500)
+    errorHandler(err)
   })
 })
 
@@ -28,14 +28,19 @@ router.get('/new', function (req, res, next) {
 
 /* POST create patron. */
 router.post('/new', function (req, res, next) {
-  debugger
   models.Patrons.create(req.body).then(patron => {
     res.redirect('/patrons/')
   }).catch((err) => {
-    debugger
-
-  }).catch(err => {
-    console.log(`POST Error: ${err}`)
+    if (err.name === 'SequelizeValidationError') {
+      hasErr = err
+      res.redirect('/patrons/new')
+    } else {
+      // throw err into the next catch method
+      throw err
+    }
+  })
+  .catch(err => {
+    errorHandler(err)
   })
 })
 
@@ -62,7 +67,7 @@ router.get('/:id', function (req, res, next) {
       res.send(404)
     }
   }).catch(err => {
-    console.log(`ID Error: ${err}`)
+    errorHandler(err)
   })
 })
 
@@ -72,14 +77,20 @@ router.put('/:id', function (req, res, next) {
     if (patron) {
       return patron.update(req.body)
     } else {
-      res.send(404)
+      errorHandler(undefined, res)
     }
   }).then((patron) => {
     res.redirect('/patrons')
   }).catch((err) => {
-
+    if (err.name === 'SequelizeValidationError') {
+      hasErr = err
+      res.redirect('/patrons/' + req.params.id)
+    } else {
+      // throw err into the next catch method
+      throw err
+    }
   }).catch(err => {
-    console.log(` PUT Error: ${err}`)
+    errorHandler(err)
   })
 })
 

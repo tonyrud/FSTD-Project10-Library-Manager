@@ -3,6 +3,7 @@ var router = express.Router()
 const models = require('../models')
 const moment = require('moment')
 require('./routeFunctions')()
+let hasErr = false
 
 /* GET all books page. */
 router.get('/', function (req, res, next) {
@@ -57,11 +58,18 @@ router.get('/checked', function (req, res, next) {
 
 /* add books page. */
 router.get('/new', function (req, res, next) {
-  res.render('books/book_new', {
+  let viewData = {
     book: models.Books.build(),
     title: 'New Book',
-    btn: 'Create New Book'
-  })
+    btn: 'Create New Book',
+    errorMessage: 'Oops'
+  }
+  // check if put added error to hasErr variable
+  if (hasErr) {
+    viewData.errors = hasErr.errors
+    hasErr = false
+  }
+  res.render('books/book_new', viewData)
 })
 
 /* POST create book. */
@@ -69,14 +77,9 @@ router.post('/new', function (req, res, next) {
   models.Books.create(req.body).then(book => {
     res.redirect('/books/')
   }).catch((err) => {
-    debugger
     if (err.name === 'SequelizeValidationError') {
-      res.render('books/book_new', {
-        book: models.Books.build(req.body),
-        title: 'New Book',
-        message: 'Ooops!',
-        errors: err.errors
-      })
+      hasErr = err
+      res.redirect('/books/new')
     } else {
       // throw err into the next catch method
       throw err
@@ -100,11 +103,17 @@ router.get('/:id', function (req, res, next) {
   .then((book) => {
     if (book.length) {
       parseDate(book)
-      res.render('books/book', {
+      let viewData = {
         book: book[0],
         loans: book[0].Loans,
-        btn: 'Update'
-      })
+        btn: 'Update',
+        errorMessage: 'Oops'
+      }
+      if (hasErr) {
+        viewData.errors = hasErr.errors
+        hasErr = false
+      }
+      res.render('books/book', viewData)
     } else {
       // send response error
       errorHandler(undefined, res)
@@ -126,30 +135,13 @@ router.put('/:id', function (req, res, next) {
   }).then((book) => {
     res.redirect('/books/' + req.params.id)
   }).catch((err) => {
-    models.Books.findAll({
-      include: [{
-        model: models.Loans,
-        include: [
-          models.Patrons
-        ]
-      }],
-      where: { id: req.params.id }
-    })
-    .then(book => {
-      if (err.name === 'SequelizeValidationError') {
-        let bookBuild = models.Books.build(req.body)
-        res.render('books/book', {
-          book: bookBuild,
-          loans: book[0].Loans,
-          message: 'Ooops!',
-          errors: err.errors
-        })
-      } else {
-        // throw err into the next catch method
-        throw err
-      }
-
-    })
+    if (err.name === 'SequelizeValidationError') {
+      hasErr = err
+      res.redirect('/books/' + req.params.id)
+    } else {
+      // throw err into the next catch method
+      throw err
+    }
   }).catch(err => {
     errorHandler(err)
   })

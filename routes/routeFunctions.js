@@ -22,4 +22,10 @@ module.exports = function () {
       res.send(404)
     }
   }
+  this.validationErr = (err) => {
+    return {
+      message: 'Ooops!',
+      errors: err.errors
+    }
+  }
 }
