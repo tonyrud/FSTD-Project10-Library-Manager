@@ -72,8 +72,7 @@ router.get('/new', function (req, res, next) {
       patrons: data[1],
       title: 'New Loan',
       today: current,
-      returnBy: returnBy,
-      errorMessage: 'Oops'
+      returnBy: returnBy
     }
     // check if put added error to hasErr variable
     if (hasErr) {
@@ -107,23 +106,18 @@ router.post('/new', function (req, res, next) {
 
 /* GET individual book to return. */
 router.get('/return/:id', function (req, res, next) {
-  models.Books.findAll({
-    include: [{
-      model: models.Loans,
-      include: [
-        models.Patrons
-      ]
-    }],
+  models.Loans.findAll({
+    include: [models.Books, models.Patrons],
     where: { id: req.params.id }
   })
-  .then((book) => {
+  .then((loan) => {
     // parse dates to 10 characters
-    if (book) {
-      parseDate(book)
+    if (loan) {
+      parseDate(loan, 'loans')
       let viewData = {
-        book: book[0],
-        loan: book[0].Loans[0],
-        patron: book[0].Loans[0].Patron,
+        book: loan[0].Book,
+        loan: loan[0],
+        patron: loan[0].Patron,
         btn: 'Return Book',
         today: current
       }

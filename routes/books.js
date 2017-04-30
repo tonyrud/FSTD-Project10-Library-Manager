@@ -20,7 +20,6 @@ router.get('/', function (req, res, next) {
 /* GET Overdue books page. */
 router.get('/overdue', function (req, res, next) {
   const current = moment(new Date()).format('YYYY-MM-DD')
-  // debugger
   models.Loans.findAll({
     include: [models.Books],
     where: {
@@ -61,8 +60,7 @@ router.get('/new', function (req, res, next) {
   let viewData = {
     book: models.Books.build(),
     title: 'New Book',
-    btn: 'Create New Book',
-    errorMessage: 'Oops'
+    btn: 'Create New Book'
   }
   // check if put added error to hasErr variable
   if (hasErr) {
@@ -74,6 +72,10 @@ router.get('/new', function (req, res, next) {
 
 /* POST create book. */
 router.post('/new', function (req, res, next) {
+  if (!req.body.first_published) {
+    req.body.first_published = null
+  }
+  // console.log(req.body.title);
   models.Books.create(req.body).then(book => {
     res.redirect('/books/')
   }).catch((err) => {
@@ -106,8 +108,7 @@ router.get('/:id', function (req, res, next) {
       let viewData = {
         book: book[0],
         loans: book[0].Loans,
-        btn: 'Update',
-        errorMessage: 'Oops'
+        btn: 'Update'
       }
       if (hasErr) {
         viewData.errors = hasErr.errors
@@ -125,7 +126,6 @@ router.get('/:id', function (req, res, next) {
 
 /* PUT update article. */
 router.put('/:id', function (req, res, next) {
-  // debugger
   models.Books.findById(req.params.id).then((book) => {
     if (book) {
       return book.update(req.body)
@@ -133,7 +133,7 @@ router.put('/:id', function (req, res, next) {
       errorHandler(undefined, res)
     }
   }).then((book) => {
-    res.redirect('/books/' + req.params.id)
+    res.redirect('/books/')
   }).catch((err) => {
     if (err.name === 'SequelizeValidationError') {
       hasErr = err

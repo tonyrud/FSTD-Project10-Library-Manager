@@ -8,6 +8,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     title: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: 'Title is required'
@@ -16,6 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     author: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: 'Author is required'
@@ -24,6 +26,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     genre: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: 'Genre is required'
@@ -33,6 +36,7 @@ module.exports = function(sequelize, DataTypes) {
     first_published: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      defaultValue: null,
       validate: {
         isNumeric: {
           msg: 'First Published must be a number'
@@ -44,7 +48,8 @@ module.exports = function(sequelize, DataTypes) {
       associate: function (models) {
         Books.hasMany(models.Loans, {foreignKey: 'book_id'})
       }
-    }
+    },
+    timestamps: false
   })
   return Books
 }
